@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YourCompanion — Full Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1D9E75;
+  --green-light: #EAF3DE;
+  --green-mid: #97C459;
+  --green-dark: #27500A;
+  --purple: #534AB7;
+  --purple-light: #EEEDFE;
+  --purple-mid: #AFA9EC;
+  --purple-dark: #26215C;
+  --blue: #185FA5;
+  --blue-light: #E6F1FB;
+  --blue-dark: #042C53;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --red: #E24B4A;
+  --red-light: #FCEBEB;
+  --bg: #F7F5F0;
+  --card: #FFFFFF;
+  --border: rgba(0,0,0,0.10);
+  --text: #1a1a18;
+  --text2: #666660;
+  --text3: #999993;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+/* ── LANDING ── */
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--bg);
+}
+
+.landing-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8rem;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+
+.landing-logo span { color: var(--green); }
+
+.landing-tagline {
+  font-size: 1rem;
+  color: var(--text2);
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.app-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.25rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-align: left;
+}
+
+.app-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.app-card:active { transform: scale(0.98); }
+
+.app-card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; margin-bottom: 0.75rem;
+}
+
+.app-card-icon.green { background: var(--green-light); }
+.app-card-icon.purple { background: var(--purple-light); }
+.app-card-icon.blue { background: var(--blue-light); }
+.app-card-icon.amber { background: var(--amber-light); }
+
+.app-card-name {
+  font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem;
+}
+.app-card-desc {
+  font-size: 0.78rem; color: var(--text2); line-height: 1.4;
+}
+
+/* ── PHONE SHELL ── */
+.app-shell {
+  display: none;
+  min-height: 100vh;
+  background: var(--bg);
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem 2rem;
+}
+
+.app-shell.active { display: flex; }
+
+.shell-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  width: 100%; max-width: 390px;
+  margin-bottom: 1rem;
+}
+
+.back-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--card); border: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem; color: var(--text2);
+  flex-shrink: 0;
+}
+.back-btn:hover { background: var(--bg); }
+
+.shell-title { font-size: 0.85rem; color: var(--text2); font-weight: 400; }
+.shell-title strong { color: var(--text); font-weight: 500; }
+
+/* ── PHONE FRAME ── */
+.phone-frame {
+  width: 100%; max-width: 390px;
+  background: var(--card);
+  border-radius: 28px;
+  border: 0.5px solid var(--border);
+  overflow: hidden;
+  min-height: 680px;
+  display: flex; flex-direction: column;
+}
+
+.status-bar {
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.status-bar.green { background: var(--green-light); }
+.status-bar.purple { background: var(--purple-light); }
+.status-bar.blue { background: var(--blue-light); }
+.status-bar.amber { background: var(--amber-light); }
+
+.screen { display: none; flex: 1; flex-direction: column; padding: 1.25rem 1rem; }
+.screen.active { display: flex; }
+
+/* ── COMPONENTS ── */
+.progress-wrap { height: 3px; background: #eee; border-radius: 2px; margin: 6px 0 14px; }
+.progress-fill { height: 3px; border-radius: 2px; transition: width 0.3s; }
+.pg-green { background: var(--green); }
+.pg-purple { background: var(--purple); }
+.pg-blue { background: var(--blue); }
+
+.step-badge {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 10px; margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.sb-green { background: var(--green-light); color: var(--green-dark); }
+.sb-purple { background: var(--purple-light); color: var(--purple-dark); }
+.sb-blue { background: var(--blue-light); color: var(--blue-dark); }
+.sb-amber { background: var(--amber-light); color: #633806; }
+.sb-red { background: var(--red-light); color: #501313; }
+
+.screen-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem; line-height: 1.3;
+  color: var(--text); margin-bottom: 1rem;
+}
+
+.input-field {
+  background: #F7F5F0; border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 12px;
+  font-size: 13px; color: var(--text2);
+  margin-bottom: 8px; font-family: 'DM Sans', sans-serif;
+  width: 100%;
+}
+
+.input-label { font-size: 10px; color: var(--text3); margin-bottom: 4px; font-weight: 500; letter-spacing: 0.04em; }
+
+.btn-primary {
+  width: 100%; padding: 12px; border: none; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: opacity 0.15s, transform 0.1s;
+  margin-top: 10px;
+}
+.btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+.btn-green { background: var(--green); color: #fff; }
+.btn-purple { background: var(--purple); color: #fff; }
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-outline-green { background: transparent; color: var(--green); border: 0.5px solid var(--green); }
+.btn-sos { background: var(--red); color: #fff; margin-top: 6px; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.chip {
+  font-size: 11px; padding: 4px 10px; border-radius: 20px;
+  background: #F7F5F0; border: 0.5px solid var(--border);
+  color: var(--text2); cursor: pointer; transition: all 0.15s;
+}
+.chip.on-green { background: var(--green-light); border-color: var(--green-mid); color: var(--green-dark); }
+.chip.on-purple { background: var(--purple-light); border-color: var(--purple-mid); color: var(--purple-dark); }
+.chip.on-blue { background: var(--blue-light); border-color: #85B7EB; color: var(--blue-dark); }
+.chip.on-red { background: var(--red-light); border-color: #F09595; color: #501313; }
+
+.info-card {
+  border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px;
+  border: 0.5px solid transparent;
+}
+.ic-green { background: var(--green-light); border-color: #C0DD97; }
+.ic-purple { background: var(--purple-light); border-color: var(--purple-mid); }
+.ic-blue { background: var(--blue-light); border-color: #85B7EB; }
+.ic-border { background: var(--card); border-color: var(--border); }
+
+.ic-title { font-size: 11px; font-weight: 500; margin-bottom: 3px; }
+.ic-title.green { color: var(--green-dark); }
+.ic-title.purple { color: var(--purple-dark); }
+.ic-title.blue { color: var(--blue-dark); }
+.ic-body { font-size: 11px; line-height: 1.5; color: var(--text2); }
+.ic-body.green { color: #3B6D11; }
+.ic-body.purple { color: #534AB7; }
+.ic-body.blue { color: var(--blue); }
+
+.avatar {
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-weight: 500; flex-shrink: 0;
+}
+.av-sm { width: 32px; height: 32px; font-size: 11px; }
+.av-md { width: 40px; height: 40px; font-size: 13px; }
+.av-lg { width: 48px; height: 48px; font-size: 15px; }
+.av-green { background: #C0DD97; color: var(--green-dark); }
+.av-purple { background: var(--purple-mid); color: var(--purple-dark); }
+.av-blue { background: #B5D4F4; color: var(--blue-dark); }
+.av-amber { background: #FAC775; color: #412402; }
+
+.row { display: flex; align-items: center; gap: 8px; }
+.row-between { display: flex; align-items: center; justify-content: space-between; }
+
+.divider { height: 0.5px; background: var(--border); margin: 10px 0; }
+
+.badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 8px; font-weight: 500; }
+.badge-green { background: var(--green-light); color: var(--green-dark); }
+.badge-purple { background: var(--purple-light); color: var(--purple-dark); }
+.badge-blue { background: var(--blue-light); color: var(--blue-dark); }
+.badge-amber { background: var(--amber-light); color: #633806; }
+.badge-red { background: var(--red-light); color: #501313; }
+
+.section-label {
+  font-size: 10px; font-weight: 500; color: var(--text3);
+  letter-spacing: 0.05em; margin-bottom: 6px; margin-top: 4px;
+}
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.stat-card { background: #F7F5F0; border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+.stat-num { font-size: 1.4rem; font-weight: 500; color: var(--text); }
+.stat-lbl { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+.check-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+.ck { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.ck-done { background: var(--green-light); color: var(--green-dark); }
+.ck-pend { background: #F7F5F0; border: 0.5px solid var(--border); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  display: flex; justify-content: space-around;
+  padding: 10px 4px 8px;
+  border-top: 0.5px solid var(--border);
+  margin-top: auto; flex-shrink: 0;
+}
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 9px; color: var(--text3); cursor: pointer; padding: 0 8px; }
+.nav-item.active { color: var(--green); }
+.nav-item.active.purple { color: var(--purple); }
+.nav-item.active.blue { color: var(--blue); }
+.nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── LIVE DOT ── */
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 4px; }
+
+/* ── NRI DESKTOP ── */
+.nri-shell {
+  display: none; min-height: 100vh;
+  background: var(--bg); padding: 1.5rem;
+}
+.nri-shell.active { display: block; }
+
+.nri-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem; max-width: 900px;
+}
+.nri-logo { font-family: 'DM Serif Display', serif; font-size: 1.4rem; }
+.nri-logo span { color: var(--green); }
+
+.nri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 900px; margin-bottom: 14px; }
+.nri-grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; max-width: 900px; }
+.nri-card {
+  background: var(--card); border: 0.5px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem;
+}
+.nri-card-title { font-size: 12px; font-weight: 500; color: var(--text3); letter-spacing: 0.04em; margin-bottom: 10px; }
+
+.back-bar {
+  display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; cursor: pointer;
+}
+.back-bar span { font-size: 0.85rem; color: var(--text2); }
+
+/* ── SCROLLABLE CONTENT ── */
+.scroll-content { flex: 1; overflow-y: auto; }
+.scroll-content::-webkit-scrollbar { width: 0; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.screen.active { animation: fadeIn 0.2s ease; }
+
+.rating-stars { color: #EF9F27; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LANDING ══════════════ -->
+<div id="landing" class="landing">
+  <div class="landing-logo">Your<span>Companion</span></div>
+  <div class="landing-tagline">An adopted grandchild for every elder who deserves one</div>
+  <div class="app-grid">
+    <div class="app-card" onclick="openApp('elder')">
+      <div class="app-card-icon green">🌿</div>
+      <div class="app-card-name">Elder app</div>
+      <div class="app-card-desc">For seniors — book companions, manage sessions</div>
+    </div>
+    <div class="app-card" onclick="openApp('family')">
+      <div class="app-card-icon amber">👨‍👩‍👧</div>
+      <div class="app-card-name">Family app</div>
+      <div class="app-card-desc">Monitor parents, book sessions remotely</div>
+    </div>
+    <div class="app-card" onclick="openApp('nri')">
+      <div class="app-card-icon blue">🌐</div>
+      <div class="app-card-name">NRI dashboard</div>
+      <div class="app-card-desc">Desktop view for families abroad</div>
+    </div>
+    <div class="app-card" onclick="openApp('companion')">
+      <div class="app-card-icon purple">💼</div>
+      <div class="app-card-name">Companion app</div>
+      <div class="app-card-desc">Apply, train, and manage your sessions</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ELDER APP ══════════════ -->
+<div id="app-elder" class="app-shell">
+  <div class="shell-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div class="shell-title"><strong>Elder app</strong> — YourCompanion</div>
+  </div>
+  <div class="phone-frame">
+    <div class="status-bar green"></div>
+
+    <!-- E1: Onboarding 1 -->
+    <div id="e1" class="screen active">
+      <span class="step-badge sb-green">Step 1 of 4</span>
+      <div class="progress-wrap"><div class="progress-fill pg-green" style="width:25%"></div></div>
+      <div class="screen-title">Welcome 🌿<br>Tell us about you</div>
+      <div class="input-field">Your name</div>
+      <div class="input-field">Your age</div>
+      <div class="input-field">Your city</div>
+      <div class="input-field">Preferred language</div>
+      <button class="btn-primary btn-green" onclick="goTo('e2')">Continue →</button>
+    </div>
+
+    <!-- E2: Onboarding 2 -->
+    <div id="e2" class="screen">
+      <span class="step-badge sb-green">Step 2 of 4</span>
+      <div class="progress-wrap"><div class="progress-fill pg-green" style="width:50%"></div></div>
+      <div class="screen-title">What do you enjoy?</div>
+      <div class="section-label">PICK ALL THAT FEEL RIGHT</div>
+      <div class="chip-row">
+        <span class="chip on-green" onclick="toggleChip(this)">🏏 Cricket</span>
+        <span class="chip" onclick="toggleChip(this)">🎵 Music</span>
+        <span class="chip on-green" onclick="toggleChip(this)">🌿 Gardening</span>
+        <span class="chip" onclick="toggleChip(this)">📖 Books</span>
+        <span class="chip" onclick="toggleChip(this)">🎬 Movies</span>
+        <span class="chip on-green" onclick="toggleChip(this)">🙏 Spirituality</span>
+        <span class="chip" onclick="toggleChip(this)">♟️ Chess</span>
+        <span class="chip" onclick="toggleChip(this)">🍳 Cooking</span>
+      </div>
+      <div class="section-label">I PREFER A COMPANION WHO IS…</div>
+      <div class="chip-row">
+        <span class="chip on-green" onclick="toggleChip(this)">Calm &amp; quiet</span>
+        <span class="chip" onclick="toggleChip(this)">Chatty</span>
+        <span class="chip" onclick="toggleChip(this)">Same gender</span>
+        <span class="chip" onclick="toggleChip(this)">Any is fine</span>
+      </div>
+      <button class="btn-primary btn-green" onclick="goTo('e3')">Continue →</button>
+    </div>
+
+    <!-- E3: Onboarding 3 -->
+    <div id="e3" class="screen">
+      <span class="step-badge sb-green">Step 3 of 4</span>
+      <div class="progress-wrap"><div class="progress-fill pg-green" style="width:75%"></div></div>
+      <div class="screen-title">Add a family contact</div>
+      <div class="input-field">Family member's name</div>
+      <div class="input-field">Their phone number</div>
+      <div class="input-field">Their city / country</div>
+      <div class="info-card ic-green">
+        <div class="ic-body green">They'll receive a WhatsApp update when your companion arrives and leaves every session 🔔</div>
+      </div>
+      <button class="btn-primary btn-green" onclick="goTo('e4')">Continue →</button>
+    </div>
+
+    <!-- E4: Onboarding 4 — First Match -->
+    <div id="e4" class="screen">
+      <span class="step-badge sb-green">Step 4 of 4</span>
+      <div class="progress-wrap"><div class="progress-fill pg-green" style="width:100%"></div></div>
+      <div class="screen-title">Meet your first Companion</div>
+      <div class="info-card ic-green">
+        <div class="row" style="margin-bottom:8px">
+          <div class="avatar av-md av-green">KR</div>
+          <div>
+            <div style="font-size:13px;font-weight:500;color:var(--green-dark)">Kavitha Rajan</div>
+            <div style="font-size:11px;color:#3B6D11">Tamil · Chennai · 23 yrs</div>
+          </div>
+          <div style="margin-left:auto"><span class="rating-stars">★★★★★</span><div style="font-size:10px;color:#3B6D11;text-align:right">4.9 · 47 sessions</div></div>
+        </div>
+        <div style="font-size:11px;color:#3B6D11">Loves Carnatic music &amp; cricket. Patient, calm listener. Fluent in Tamil and English.</div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.5">
+        Your first session is always a free 30-min video call. No home visit until you feel fully comfortable.
+      </div>
+      <button class="btn-primary btn-green" onclick="goTo('ehome')">Book free intro call →</button>
+    </div>
+
+    <!-- E Home -->
+    <div id="ehome" class="screen">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:14px">Good afternoon, Suresh 👋</div>
+        <div class="info-card ic-green" style="margin-bottom:12px">
+          <div style="font-size:10px;color:#3B6D11;margin-bottom:6px">NEXT SESSION</div>
+          <div class="row">
+            <div class="avatar av-md av-green">KR</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:500;color:var(--green-dark)">Kavitha Rajan</div>
+              <div style="font-size:11px;color:#3B6D11">Today · 3:00 PM · Company visit · 2 hrs</div>
+            </div>
+          </div>
+        </div>
+        <div class="section-label">BOOK A SESSION</div>
+        <div class="chip-row">
+          <span class="chip on-green">Company visit</span>
+          <span class="chip" onclick="toggleChip(this,'green')">Assist outing</span>
+          <span class="chip" onclick="toggleChip(this,'green')">Video call</span>
+        </div>
+        <div class="input-field">Pick a date &amp; time</div>
+        <div class="input-field">Duration — 2 hours</div>
+        <button class="btn-primary btn-green" onclick="goTo('ehome')">Confirm booking — ₹500</button>
+        <button class="btn-primary btn-sos">SOS — call family now</button>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active" onclick="goTo('ehome')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item" onclick="goTo('esessions')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Sessions</div>
+        <div class="nav-item" onclick="goTo('esaathi')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Saathi</div>
+      </div>
+    </div>
+
+    <!-- E Sessions -->
+    <div id="esessions" class="screen">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:14px">My sessions</div>
+        <div class="section-label">UPCOMING</div>
+        <div class="info-card ic-border" style="margin-bottom:6px">
+          <div class="row-between">
+            <div>
+              <div style="font-size:12px;font-weight:500">Company visit with Kavitha</div>
+              <div style="font-size:11px;color:var(--text2)">Fri 23 May · 3:00 PM · 2 hrs</div>
+            </div>
+            <span class="badge badge-green">Confirmed</span>
+          </div>
+        </div>
+        <div class="info-card ic-border" style="margin-bottom:12px">
+          <div class="row-between">
+            <div>
+              <div style="font-size:12px;font-weight:500">Video call with Kavitha</div>
+              <div style="font-size:11px;color:var(--text2)">Mon 26 May · 11:00 AM · 1 hr</div>
+            </div>
+            <span class="badge badge-blue">Scheduled</span>
+          </div>
+        </div>
+        <div class="section-label">PAST SESSIONS</div>
+        <div class="info-card ic-border" style="margin-bottom:6px">
+          <div class="row-between">
+            <div>
+              <div style="font-size:12px;font-weight:500">Wed 14 May — Company visit</div>
+              <div style="font-size:11px;color:var(--text2)">Watched cricket, had tea together</div>
+            </div>
+            <div class="rating-stars" style="font-size:13px">★★★★★</div>
+          </div>
+        </div>
+        <div class="info-card ic-border" style="margin-bottom:6px">
+          <div class="row-between">
+            <div>
+              <div style="font-size:12px;font-weight:500">Sun 11 May — Assist outing</div>
+              <div style="font-size:11px;color:var(--text2)">Grocery shopping at Nilgiris</div>
+            </div>
+            <div class="rating-stars" style="font-size:13px">★★★★★</div>
+          </div>
+        </div>
+        <div class="info-card ic-border">
+          <div class="row-between">
+            <div>
+              <div style="font-size:12px;font-weight:500">Tue 6 May — Video call</div>
+              <div style="font-size:11px;color:var(--text2)">General catch-up</div>
+            </div>
+            <div class="rating-stars" style="font-size:13px">★★★★☆</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goTo('ehome')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item active" onclick="goTo('esessions')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Sessions</div>
+        <div class="nav-item" onclick="goTo('esaathi')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Saathi</div>
+      </div>
+    </div>
+
+    <!-- E My Saathi -->
+    <div id="esaathi" class="screen">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:14px">My Saathi</div>
+        <div class="info-card ic-green" style="margin-bottom:12px">
+          <div class="row" style="margin-bottom:8px">
+            <div class="avatar av-lg av-green">KR</div>
+            <div>
+              <div style="font-size:14px;font-weight:500;color:var(--green-dark)">Kavitha Rajan</div>
+              <div style="font-size:11px;color:#3B6D11">Companion since January 2025</div>
+              <div class="rating-stars" style="margin-top:2px">★★★★★ <span style="font-size:10px;color:#3B6D11">4.9 avg · 24 sessions together</span></div>
+            </div>
+          </div>
+          <div class="divider" style="border-color:#C0DD97"></div>
+          <div style="font-size:11px;color:#3B6D11">Loves Carnatic music, Tamil films, and cricket. Patient and cheerful. Always brings sweets 🙂</div>
+        </div>
+        <div class="section-label">UPCOMING WITH KAVITHA</div>
+        <div class="info-card ic-border" style="margin-bottom:10px">
+          <div style="font-size:12px;font-weight:500">Company visit</div>
+          <div style="font-size:11px;color:var(--text2)">Fri 23 May · 3:00 PM · 2 hrs · Adyar</div>
+        </div>
+        <div class="section-label">RECENT SESSIONS</div>
+        <div class="info-card ic-border" style="margin-bottom:6px">
+          <div style="font-size:12px;font-weight:500">Wed 14 May</div>
+          <div style="font-size:11px;color:var(--text2)">Watched IPL highlights, had masala chai</div>
+          <div class="rating-stars" style="margin-top:3px;font-size:12px">★★★★★</div>
+        </div>
+        <div class="info-card ic-border">
+          <div style="font-size:12px;font-weight:500">Sun 11 May</div>
+          <div style="font-size:11px;color:var(--text2)">Grocery run to Nilgiris, helped with Swiggy order</div>
+          <div class="rating-stars" style="margin-top:3px;font-size:12px">★★★★★</div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goTo('ehome')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item" onclick="goTo('esessions')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Sessions</div>
+        <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Saathi</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FAMILY APP ══════════════ -->
+<div id="app-family" class="app-shell">
+  <div class="shell-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div class="shell-title"><strong>Family app</strong> — YourCompanion</div>
+  </div>
+  <div class="phone-frame">
+    <div class="status-bar amber"></div>
+
+    <!-- F Home -->
+    <div id="fhome" class="screen active">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:14px">My parents</div>
+        <div class="info-card ic-border" style="margin-bottom:8px">
+          <div class="row-between" style="margin-bottom:8px">
+            <div class="row">
+              <div class="avatar av-md av-amber">SR</div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Suresh Rajan, 74</div>
+                <div style="font-size:11px;color:var(--text2)">Adyar, Chennai</div>
+              </div>
+            </div>
+            <span class="badge badge-green">Active plan</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px">Next session: Fri 23 May · 3 PM · Kavitha R.</div>
+          <button class="btn-primary btn-green" style="margin-top:0;padding:8px" onclick="goTo('flive')">View live status →</button>
+        </div>
+        <div class="info-card ic-border">
+          <div class="row-between" style="margin-bottom:8px">
+            <div class="row">
+              <div class="avatar av-md av-amber">LR</div>
+              <div>
+                <div style="font-size:13px;font-weight:500">Lalitha Rajan, 70</div>
+                <div style="font-size:11px;color:var(--text2)">Adyar, Chennai</div>
+              </div>
+            </div>
+            <span class="badge badge-amber">No plan</span>
+          </div>
+          <button class="btn-primary btn-green" style="margin-top:0;padding:8px" onclick="goTo('fbook')">Add plan for Amma →</button>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item" onclick="goTo('freport')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Reports</div>
+        <div class="nav-item" onclick="goTo('fbook')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Book</div>
+      </div>
+    </div>
+
+    <!-- F Live Status -->
+    <div id="flive" class="screen">
+      <div class="scroll-content">
+        <div class="back-btn" onclick="goTo('fhome')" style="margin-bottom:12px;display:inline-flex">←</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:12px">Appa — live status</div>
+        <div class="info-card ic-green" style="margin-bottom:10px">
+          <div style="font-size:11px;color:#3B6D11;margin-bottom:6px"><span class="live-dot"></span>Companion is with Appa right now</div>
+          <div class="row">
+            <div class="avatar av-md av-green">KR</div>
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--green-dark)">Kavitha Rajan</div>
+              <div style="font-size:11px;color:#3B6D11">Arrived 3:02 PM · GPS verified ✓</div>
+            </div>
+          </div>
+        </div>
+        <div class="section-label">TODAY'S SESSION NOTE</div>
+        <div class="info-card ic-border" style="margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">"Suresh uncle was in great spirits today. He showed me old photos of the house in Mylapore and talked proudly about his college cricket days. Very cheerful."</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:6px">— Kavitha · 3:22 PM</div>
+        </div>
+        <div class="section-label">HEALTH FLAGS</div>
+        <div class="info-card ic-border">
+          <div class="row" style="gap:6px">
+            <span class="badge badge-amber">Health note</span>
+            <div style="font-size:11px;color:var(--text2)">Mentioned knee pain on stairs — 2nd time this month</div>
+          </div>
+        </div>
+        <button class="btn-primary btn-green" onclick="goTo('fbook')" style="margin-top:12px">Book next session</button>
+      </div>
+    </div>
+
+    <!-- F Monthly Report -->
+    <div id="freport" class="screen">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:12px">May 2025 report</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">Sessions</div></div>
+          <div class="stat-card"><div class="stat-num">4.9</div><div class="stat-lbl">Avg rating</div></div>
+          <div class="stat-card"><div class="stat-num">16h</div><div class="stat-lbl">Together</div></div>
+          <div class="stat-card"><div class="stat-num">2</div><div class="stat-lbl">Health flags</div></div>
+        </div>
+        <div class="section-label">COMPANION'S SUMMARY</div>
+        <div class="info-card ic-border" style="margin-bottom:8px">
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">Appa was cheerful in 7 of 8 sessions. Engaged well with cricket discussions and Tamil film music. Strong memory for past events. Comfortable with Kavitha now.</div>
+        </div>
+        <div class="section-label">RECOMMENDATION</div>
+        <div class="info-card ic-border">
+          <div class="row" style="gap:6px;margin-bottom:4px">
+            <span class="badge badge-amber">Doctor visit</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2)">Knee pain mentioned in 2 sessions this month. Consider scheduling a check-up.</div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goTo('fhome')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Reports</div>
+        <div class="nav-item" onclick="goTo('fbook')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Book</div>
+      </div>
+    </div>
+
+    <!-- F Book Session -->
+    <div id="fbook" class="screen">
+      <div class="scroll-content">
+        <div class="back-btn" onclick="goTo('fhome')" style="margin-bottom:12px;display:inline-flex">←</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:12px">Book for Appa</div>
+        <div class="section-label">SESSION TYPE</div>
+        <div class="chip-row">
+          <span class="chip on-green">Company visit</span>
+          <span class="chip" onclick="toggleChip(this,'green')">Assist outing</span>
+          <span class="chip" onclick="toggleChip(this,'green')">Video call</span>
+        </div>
+        <div class="section-label">COMPANION</div>
+        <div class="info-card ic-green" style="margin-bottom:8px">
+          <div class="row">
+            <div class="avatar av-sm av-green">KR</div>
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--green-dark)">Kavitha R. (Appa's preferred)</div>
+              <div style="font-size:10px;color:#3B6D11">Available Fri &amp; Sat this week</div>
+            </div>
+          </div>
+        </div>
+        <div class="input-field">Date &amp; time</div>
+        <div class="input-field">Duration — 2 hours</div>
+        <div class="section-label">SPECIAL INSTRUCTIONS FOR KAVITHA</div>
+        <div class="input-field" style="height:50px">Appa is a bit tired this week…</div>
+        <button class="btn-primary btn-green" onclick="goTo('fhome')">Confirm booking — ₹500</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ NRI DASHBOARD ══════════════ -->
+<div id="app-nri" class="nri-shell">
+  <div class="back-bar" onclick="goHome()">
+    <div class="back-btn" style="display:inline-flex">←</div>
+    <span>Back to home</span>
+  </div>
+  <div class="nri-header">
+    <div class="nri-logo">Your<span>Companion</span> <span style="font-size:0.75rem;color:var(--text2);font-family:'DM Sans',sans-serif;font-weight:400">NRI Dashboard</span></div>
+    <div class="row" style="gap:12px">
+      <div style="font-size:12px;color:var(--text2);text-align:right">
+        <div>Chennai: 4:30 PM</div>
+        <div>Singapore: 7:00 PM</div>
+      </div>
+      <div class="avatar av-md av-blue">DR</div>
+    </div>
+  </div>
+
+  <div class="nri-grid">
+    <div class="nri-card">
+      <div class="nri-card-title">SURESH RAJAN, 74 — ADYAR</div>
+      <div class="row" style="margin-bottom:8px">
+        <span class="live-dot"></span>
+        <span style="font-size:13px;font-weight:500;color:var(--green)">Kavitha is with Appa right now</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px">Arrived 3:02 PM · GPS verified · Session ends ~5:00 PM</div>
+      <button class="btn-primary btn-green" style="padding:8px;font-size:12px" onclick="">View session live</button>
+    </div>
+    <div class="nri-card">
+      <div class="nri-card-title">LALITHA RAJAN, 70 — ADYAR</div>
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px">No session today</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px">Last session: 18 May — Video call with Priya</div>
+      <button class="btn-primary btn-blue" style="padding:8px;font-size:12px">Book a session for Amma</button>
+    </div>
+  </div>
+
+  <div class="nri-grid-3">
+    <div class="nri-card">
+      <div class="nri-card-title">LATEST COMPANION NOTES</div>
+      <div class="info-card ic-border" style="margin-bottom:8px">
+        <div class="row" style="margin-bottom:6px">
+          <div class="avatar av-sm av-green">KR</div>
+          <div style="font-size:11px;color:var(--text2)">Kavitha · Today 3:22 PM</div>
+        </div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">"Suresh uncle was very cheerful today. He showed me photos of the old house in Mylapore and talked proudly about his college cricket team. In great spirits."</div>
+      </div>
+      <div class="info-card ic-border">
+        <div class="row" style="margin-bottom:6px">
+          <div class="avatar av-sm av-green">KR</div>
+          <div style="font-size:11px;color:var(--text2)">Kavitha · Wed 14 May</div>
+        </div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">Good session. Mentioned knee pain when climbing stairs — same as last visit. Suggest checking with a doctor.</div>
+        <span class="badge badge-amber" style="margin-top:6px;display:inline-block">Health flag</span>
+      </div>
+    </div>
+    <div class="nri-card">
+      <div class="nri-card-title">MAY SUMMARY — APPA</div>
+      <div class="stat-card" style="margin-bottom:6px"><div class="stat-num">8</div><div class="stat-lbl">Sessions this month</div></div>
+      <div class="stat-card" style="margin-bottom:6px"><div class="stat-num">4.9</div><div class="stat-lbl">Avg companion rating</div></div>
+      <div class="stat-card" style="margin-bottom:10px"><div class="stat-num">2</div><div class="stat-lbl">Health flags</div></div>
+      <button class="btn-primary btn-blue" style="padding:8px;font-size:12px;margin-top:0">Download full report</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ COMPANION APP ══════════════ -->
+<div id="app-companion" class="app-shell">
+  <div class="shell-header">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <div class="shell-title"><strong>Companion app</strong> — YourCompanion</div>
+  </div>
+  <div class="phone-frame">
+    <div class="status-bar purple"></div>
+
+    <!-- C1: Apply -->
+    <div id="c1" class="screen active">
+      <span class="step-badge sb-purple">Apply</span>
+      <div class="progress-wrap"><div class="progress-fill pg-purple" style="width:20%"></div></div>
+      <div class="screen-title">Join as a<br>Companion</div>
+      <div class="input-field">Full name</div>
+      <div class="input-field">Age &amp; city</div>
+      <div class="input-field">Occupation / college</div>
+      <div class="input-field">Languages spoken</div>
+      <div class="section-label">WHY DO YOU WANT TO DO THIS?</div>
+      <div class="input-field" style="height:50px">Tell us in a few words…</div>
+      <button class="btn-primary btn-purple" onclick="goTo('c2')">Submit application →</button>
+    </div>
+
+    <!-- C2: Verify -->
+    <div id="c2" class="screen">
+      <span class="step-badge sb-purple">Verify</span>
+      <div class="progress-wrap"><div class="progress-fill pg-purple" style="width:45%"></div></div>
+      <div class="screen-title">Document check</div>
+      <div class="check-row"><div class="ck ck-done">✓</div>Aadhaar verified</div>
+      <div class="check-row"><div class="ck ck-done">✓</div>Selfie match completed</div>
+      <div class="check-row"><div class="ck ck-pend"></div>Police verification (3–5 days)</div>
+      <div class="check-row"><div class="ck ck-pend"></div>Reference check (1 person)</div>
+      <div class="info-card ic-purple" style="margin:10px 0">
+        <div class="ic-body purple">Police verification typically takes 3–5 days. We'll WhatsApp you the moment it clears. You can start training in the meantime.</div>
+      </div>
+      <button class="btn-primary btn-purple" onclick="goTo('c3')">Start training now →</button>
+    </div>
+
+    <!-- C3: Train -->
+    <div id="c3" class="screen">
+      <span class="step-badge sb-purple">Train</span>
+      <div class="progress-wrap"><div class="progress-fill pg-purple" style="width:70%"></div></div>
+      <div class="screen-title">Companion training</div>
+      <div class="info-card ic-border" style="margin-bottom:6px">
+        <div class="row-between">
+          <div><div style="font-size:12px;font-weight:500">Module 1 — Understanding loneliness</div><div style="font-size:10px;color:var(--text2)">20 min · Video + quiz</div></div>
+          <span class="badge badge-green">Done ✓</span>
+        </div>
+      </div>
+      <div class="info-card ic-border" style="margin-bottom:6px">
+        <div class="row-between">
+          <div><div style="font-size:12px;font-weight:500">Module 2 — Active listening</div><div style="font-size:10px;color:var(--text2)">25 min · Video + roleplay</div></div>
+          <span class="badge badge-green">Done ✓</span>
+        </div>
+      </div>
+      <div class="info-card ic-purple" style="margin-bottom:6px">
+        <div class="row-between">
+          <div><div style="font-size:12px;font-weight:500;color:var(--purple-dark)">Module 3 — Safety &amp; boundaries</div><div style="font-size:10px;color:var(--purple)">30 min · Video + quiz</div></div>
+          <span class="badge badge-purple">In progress</span>
+        </div>
+      </div>
+      <div class="info-card ic-border" style="margin-bottom:6px">
+        <div class="row-between">
+          <div><div style="font-size:12px;font-weight:500;color:var(--text3)">Module 4 — Health observations</div><div style="font-size:10px;color:var(--text3)">20 min · Video</div></div>
+          <span class="badge" style="background:#F7F5F0;color:var(--text3)">Locked</span>
+        </div>
+      </div>
+      <button class="btn-primary btn-purple" onclick="goTo('c4')">Continue Module 3 →</button>
+    </div>
+
+    <!-- C4: Ready -->
+    <div id="c4" class="screen">
+      <span class="step-badge sb-purple">All clear!</span>
+      <div class="progress-wrap"><div class="progress-fill pg-purple" style="width:100%"></div></div>
+      <div class="screen-title">You're a<br>YourCompanion ✨</div>
+      <div class="info-card ic-purple" style="margin-bottom:12px">
+        <div class="row" style="margin-bottom:6px">
+          <div class="avatar av-md av-purple">KR</div>
+          <div>
+            <div style="font-size:13px;font-weight:500;color:var(--purple-dark)">Kavitha Rajan · YC-2841</div>
+            <div style="font-size:11px;color:var(--purple)">Gig tier · Chennai</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--purple)">All 4 training modules passed ✓ · Background verified ✓</div>
+      </div>
+      <div class="section-label">SET YOUR AVAILABILITY</div>
+      <div class="input-field">Mon–Sat · 10am–6pm</div>
+      <div style="font-size:11px;color:var(--text2);margin:8px 0;line-height:1.5">Your first session request will arrive within 48 hours of going live.</div>
+      <button class="btn-primary btn-purple" onclick="goTo('chome')">Go to my dashboard →</button>
+    </div>
+
+    <!-- C Home Dashboard -->
+    <div id="chome" class="screen">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:14px">Good afternoon, Kavitha 👋</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">Sessions done</div></div>
+          <div class="stat-card"><div class="stat-num">4.9</div><div class="stat-lbl">My rating</div></div>
+          <div class="stat-card"><div class="stat-num">₹4,200</div><div class="stat-lbl">This month</div></div>
+          <div class="stat-card"><div class="stat-num">3</div><div class="stat-lbl">Regulars</div></div>
+        </div>
+        <div class="section-label">UPCOMING SESSIONS</div>
+        <div class="info-card ic-border" style="margin-bottom:6px">
+          <div class="row-between">
+            <div>
+              <div style="font-size:12px;font-weight:500">Suresh Rajan · Company visit</div>
+              <div style="font-size:11px;color:var(--text2)">Fri 23 May · 3:00 PM · Adyar</div>
+            </div>
+            <button style="font-size:11px;padding:5px 10px;border-radius:var(--radius-sm);border:0.5px solid var(--purple);background:transparent;color:var(--purple);cursor:pointer" onclick="goTo('cbrief')">Brief</button>
+          </div>
+        </div>
+        <div class="info-card ic-border">
+          <div class="row-between">
+            <div>
+              <div style="font-size:12px;font-weight:500">Meena Krishnan · Video call</div>
+              <div style="font-size:11px;color:var(--text2)">Sat 24 May · 11:00 AM</div>
+            </div>
+            <button style="font-size:11px;padding:5px 10px;border-radius:var(--radius-sm);border:0.5px solid var(--purple);background:transparent;color:var(--purple);cursor:pointer">Brief</button>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item active purple"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item" onclick="goTo('cschedule')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Schedule</div>
+        <div class="nav-item" onclick="goTo('cearnings')"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Earnings</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+      </div>
+    </div>
+
+    <!-- C Brief -->
+    <div id="cbrief" class="screen">
+      <div class="scroll-content">
+        <div class="back-btn" onclick="goTo('chome')" style="margin-bottom:12px;display:inline-flex">←</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:12px">Session brief</div>
+        <div class="info-card ic-purple" style="margin-bottom:10px">
+          <div style="font-size:13px;font-weight:500;color:var(--purple-dark);margin-bottom:3px">Suresh Rajan, 74 · Adyar</div>
+          <div style="font-size:11px;color:var(--purple)">Company visit · Fri 23 May · 3:00 PM · 2 hrs</div>
+        </div>
+        <div class="section-label">WHAT HE LOVES</div>
+        <div class="chip-row">
+          <span class="chip on-purple">Cricket</span>
+          <span class="chip on-purple">Carnatic music</span>
+          <span class="chip on-purple">Old Tamil films</span>
+          <span class="chip on-purple">Mylapore stories</span>
+        </div>
+        <div class="section-label">AVOID THESE TOPICS</div>
+        <div class="chip-row">
+          <span class="chip on-red">Son's job loss</span>
+        </div>
+        <div class="section-label">NOTE FROM FAMILY (Deepa, Singapore)</div>
+        <div class="info-card ic-border" style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">"Appa loves tea at 4 PM sharp. He may mention knee pain — please note it. Don't bring up anything about money or the Chennai property. Thank you, Kavitha 🙏"</div>
+        </div>
+        <button class="btn-primary btn-purple" onclick="goTo('cnotes')">Start session — check in ✓</button>
+      </div>
+    </div>
+
+    <!-- C Post Notes -->
+    <div id="cnotes" class="screen">
+      <div class="scroll-content">
+        <div class="back-btn" onclick="goTo('cbrief')" style="margin-bottom:12px;display:inline-flex">←</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:12px">Post-session notes</div>
+        <div class="section-label">HOW WAS SURESH UNCLE TODAY?</div>
+        <div class="chip-row">
+          <span class="chip on-purple" onclick="toggleChip(this,'purple')">Cheerful</span>
+          <span class="chip" onclick="toggleChip(this,'purple')">Quiet</span>
+          <span class="chip" onclick="toggleChip(this,'purple')">Tired</span>
+          <span class="chip" onclick="toggleChip(this,'purple')">Anxious</span>
+        </div>
+        <div class="section-label">ADD A NOTE FOR THE FAMILY</div>
+        <div class="input-field" style="height:55px">We watched IPL highlights together. He talked about watching cricket at Chepauk in 1983…</div>
+        <div class="section-label">ANY HEALTH OBSERVATIONS?</div>
+        <div class="chip-row">
+          <span class="chip" onclick="toggleChip(this,'purple')">None today</span>
+          <span class="chip on-purple" onclick="toggleChip(this,'purple')">Mentioned knee pain</span>
+          <span class="chip" onclick="toggleChip(this,'purple')">Low appetite</span>
+          <span class="chip" onclick="toggleChip(this,'purple')">Seemed confused</span>
+        </div>
+        <button class="btn-primary btn-purple" onclick="goTo('chome')">Submit &amp; check out ✓</button>
+      </div>
+    </div>
+
+    <!-- C Schedule -->
+    <div id="cschedule" class="screen">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:14px">My schedule</div>
+        <div class="section-label">THIS WEEK</div>
+        <div class="info-card ic-purple" style="margin-bottom:6px">
+          <div style="font-size:12px;font-weight:500;color:var(--purple-dark)">Fri 23 May · Suresh Rajan</div>
+          <div style="font-size:11px;color:var(--purple)">3:00–5:00 PM · Company visit · Adyar</div>
+        </div>
+        <div class="info-card ic-border" style="margin-bottom:6px">
+          <div style="font-size:12px;font-weight:500">Sat 24 May · Meena Krishnan</div>
+          <div style="font-size:11px;color:var(--text2)">11:00 AM–12:00 PM · Video call</div>
+        </div>
+        <div class="info-card ic-border" style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:500">Sun 25 May · Ravi Subramanian</div>
+          <div style="font-size:11px;color:var(--text2)">4:00–6:00 PM · Assist outing · T Nagar</div>
+        </div>
+        <div class="section-label">MY AVAILABILITY</div>
+        <div class="chip-row">
+          <span class="chip on-purple">Mon</span>
+          <span class="chip on-purple">Tue</span>
+          <span class="chip on-purple">Wed</span>
+          <span class="chip on-purple">Thu</span>
+          <span class="chip on-purple">Fri</span>
+          <span class="chip on-purple">Sat</span>
+          <span class="chip">Sun</span>
+        </div>
+        <div class="input-field">Hours: 10:00 AM – 6:00 PM</div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goTo('chome')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item active purple"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Schedule</div>
+        <div class="nav-item" onclick="goTo('cearnings')"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Earnings</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+      </div>
+    </div>
+
+    <!-- C Earnings -->
+    <div id="cearnings" class="screen">
+      <div class="scroll-content">
+        <div style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:14px">My earnings</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-num">₹4,200</div><div class="stat-lbl">May (so far)</div></div>
+          <div class="stat-card"><div class="stat-num">₹18,600</div><div class="stat-lbl">Total earned</div></div>
+        </div>
+        <div class="section-label">MAY BREAKDOWN</div>
+        <div class="info-card ic-border" style="margin-bottom:5px">
+          <div class="row-between"><span style="font-size:12px">12 sessions × ₹350 avg</span><span style="font-size:12px;font-weight:500">₹4,200</span></div>
+        </div>
+        <div class="info-card ic-border" style="margin-bottom:5px">
+          <div class="row-between"><span style="font-size:12px">Platform fee (30%)</span><span style="font-size:12px;color:var(--red)">−₹1,800</span></div>
+        </div>
+        <div class="info-card ic-green">
+          <div class="row-between"><span style="font-size:12px;font-weight:500;color:var(--green-dark)">Net payout</span><span style="font-size:13px;font-weight:500;color:var(--green)">₹4,200</span></div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:6px">Payout processed every Monday to your UPI account.</div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goTo('chome')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</div>
+        <div class="nav-item" onclick="goTo('cschedule')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Schedule</div>
+        <div class="nav-item active purple"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Earnings</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function openApp(name) {
+  document.getElementById('landing').style.display = 'none';
+  if(name === 'nri') {
+    document.getElementById('app-nri').classList.add('active');
+  } else {
+    const shell = document.getElementById('app-' + name);
+    shell.classList.add('active');
+    const firstScreen = shell.querySelector('.screen');
+    if(firstScreen) {
+      shell.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      firstScreen.classList.add('active');
+    }
+  }
+}
+
+function goHome() {
+  document.getElementById('landing').style.display = '';
+  ['app-elder','app-family','app-companion'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+  document.getElementById('app-nri').classList.remove('active');
+}
+
+function goTo(screenId) {
+  const target = document.getElementById(screenId);
+  if(!target) return;
+  const parentShell = target.closest('.app-shell');
+  if(parentShell) {
+    parentShell.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  } else {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  }
+  target.classList.add('active');
+}
+
+function toggleChip(el, colorClass) {
+  const classes = ['on-green','on-purple','on-blue'];
+  const hasAny = classes.some(c => el.classList.contains(c));
+  if(hasAny) {
+    classes.forEach(c => el.classList.remove(c));
+  } else {
+    const color = colorClass || 'green';
+    el.classList.add('on-' + color);
+  }
+}
+</script>
+</body>
+</html>
